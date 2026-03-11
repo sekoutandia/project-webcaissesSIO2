@@ -282,4 +282,42 @@ if (totalEcom != 0) {
 
 ---
 
+Partie 4 — Synthèse Théorique & Architecture
+
+1 — Norme NF525 et intégrité des données
+La certification NF525 impose le principe d'inaltérabilité. Dans l'application WebCaisse, cela signifie qu'une vente validée ne peut être ni supprimée ni modifiée. Toute correction doit faire l'objet d'une opération d'annulation (contre-passation) ou d'un avoir, garantissant une piste d'audit conforme à la législation.
+
+2 — Sécurité de la transmission des identifiants
+L'envoi de mots de passe en clair par courriel présente un risque d'interception majeur. Cette pratique contrevient au critère de Confidentialité (cycle DICP) et aux recommandations du RGPD, car elle expose inutilement des données sensibles sur des serveurs tiers.
+
+3 — Limites de la table FormuleSouscrite
+L'utilisation du couple (idPointDeVente, idFormule) comme clé primaire sans gestion temporelle interdit l'historisation. Sans attributs de date, il est impossible de gérer le changement de formule au sein d'un même mois ou de calculer une facturation précise au prorata temporis.
+
+4 — Avantages du Trigger (Déclencheur) SQL
+Un trigger assure une traçabilité au niveau du SGBD. Contrairement à un contrôle applicatif, il s'exécute automatiquement même si les données sont modifiées via un outil externe, garantissant ainsi une sécurité persistante et une intégrité absolue des logs d'audit.
+
+5 — Distinction entre WHERE et HAVING
+La clause WHERE filtre les enregistrements avant le regroupement. À l'inverse, la clause HAVING intervient après l'agrégation (GROUP BY). Elle est indispensable pour appliquer des conditions sur des fonctions de calcul comme COUNT() ou SUM().
+
+6 — Mécanisme de l'attaque par Injection SQL
+La concaténation directe de variables permet d'injecter des commandes malveillantes. Un attaquant peut insérer une condition toujours vraie (ex: ' OR 1=1 --) pour détourner une recherche, ou utiliser des caractères de fin d'instruction (;) pour exécuter des commandes destructrices comme DROP TABLE.
+
+7 — Supériorité de PreparedStatement sur Statement
+L'interface PreparedStatement offre trois avantages majeurs :
+
+Sécurité : Neutralisation des injections SQL par le typage des paramètres.
+
+Performance : Pré-compilation de la requête par le serveur de base de données.
+
+Lisibilité : Séparation claire entre la structure de la requête et les données.
+
+8 — Analyse critique de instanceof en POO
+Bien qu'utile pour identifier un type à l'exécution, l'usage de instanceof est souvent considéré comme une rupture d'encapsulation. Une approche plus robuste repose sur le polymorphisme, en définissant des méthodes spécialisées dans chaque sous-classe.
+
+9 — Robustesse face à la division par zéro
+Le calcul d'un ratio sans vérification préalable du dénominateur expose le programme à une ArithmeticException. La robustesse logicielle impose l'usage d'une condition de garde pour traiter les cas où les données sont nulles, évitant ainsi le plantage de l'application.
+
+10 — Rôle de la classe Launcher (Java 11+)
+Depuis le JDK 11, une classe héritant de Application ne peut plus être le point d'entrée direct d'un JAR exécutable. La classe Launcher sert d'intermédiaire technique pour appeler la méthode main, assurant ainsi le chargement correct des modules JavaFX.
+
 *SEKOU TANDIA — SIO2*

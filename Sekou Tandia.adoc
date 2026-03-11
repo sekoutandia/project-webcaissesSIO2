@@ -1,0 +1,133 @@
+= Correction Personnalisée - TP Étude de Cas WebCaisse
+:author: Correction pour M. Tandia
+:toc: left
+:toc-title: Sommaire
+:icons: font
+
+Bonjour M. Tandia.
+
+Le travail fourni sur l'étude de cas et les questions de synthèse est globalement d'un  bon niveau. Les concepts d'architecture logicielle, de sécurité et de bases de données sont présents, et la rédaction de la synthèse est précise.
+
+Le fait que vous souhaitiez d'abord faire vous même plutôt que de demander à l'IA est très positif mais n'oubliez pas que dans le monde d'aujourd'hui il faut *délivrer* donc:
+
+- nécessaire de maitriser vraiment des fondamentaux
+- utiliser l'IA en s'assurant de maitriser les réponses
+
+Il est impératif que l'ensemble du travail écrit fasse l'objet d'une validation orale avec M. Robert. Cette étape est strictement requise pour confirmer votre maîtrise technique et garantir que le contenu n'est pas issu d'une génération automatisée.
+
+Voici le détail factuel de la correction.
+
+
+== Mission 1 : Souscription en ligne et Sécurité
+
+=== Question 1.1 — Proposition de structure de base de données
+**Votre proposition :** Diagramme PlantUML incluant `Client`, `PointDeVente`, `Formule`, `ProgrammeFidelisation`, `Langue`, `Module` et `ActivationModule`.
+
+[NOTE]
+.Évaluation - Conforme et complet
+====
+La modélisation est correcte. Vous avez bien identifié la nécessité d'ajouter la table `Module` et une classe d'association (`ActivationModule`) pour lier les points de vente, les modules et les langues.
+====
+
+=== Question 1.2 — Faille de l'envoi de mot de passe
+**Votre réponse :** Identification de la faille DICP (Confidentialité). Proposition d'un lien avec identifiant temporaire.
+
+[NOTE]
+.Évaluation - Validé
+====
+Le diagnostic est exact et le processus de remédiation proposé est conforme aux standards de sécurité.
+====
+
+=== Questions 1.3 et 1.4 — Historisation des formules
+**Votre réponse :** Absence de dates empêchant la facturation mensuelle. Ajout de champs de date.
+
+[NOTE]
+.Évaluation - Validé
+====
+Le problème est bien identifié. Techniquement, il convient de préciser que la date de début doit faire partie de la clé primaire de la table d'historique.
+====
+
+=== Question 1.5 — Trigger SQL
+**Votre réponse :** Déclencheur avec la condition `IF OLD.idFormule <> NEW.idFormule`.
+
+[WARNING]
+.Remarque - Table ciblée
+====
+La logique conditionnelle pour éviter les audits inutiles est très bonne. Néanmoins, votre déclencheur cible la table `PointDeVente`. Dans une modélisation stricte de l'historique, le changement s'opère sur la table de liaison des souscriptions (ex: `FormuleSouscrite`).
+====
+
+== Mission 2 : Exploitation des données et Sécurité
+
+=== Question 2.1 — Requêtes SQL
+**Vos requêtes :**
+
+[WARNING]
+.Remarque - Oubli dans la requête c
+====
+* **Requêtes a et b :** Correctes. Les fonctions de filtrage (`YEAR`, `TIMESTAMPDIFF`) et l'usage de `DISTINCT` sont pertinents.
+* **Requête c :** Incomplète. La consigne exigeait l'affichage du courriel. Il manque l'attribut `mail` dans la clause `SELECT` et dans le `GROUP BY`.
+====
+
+=== Questions 2.2 et 2.3 — Faille de sécurité (OWASP) et PreparedStatement
+**Votre réponse :** Injection SQL expliquée (exemple avec `DROP TABLE`). Code Java avec `PreparedStatement`.
+
+[WARNING]
+.Remarque - Types de données Java
+====
+L'explication de la faille est exacte. Concernant le code Java, la structure est bonne, mais vous utilisez `pstmt.setString()` pour les dates. Il est préférable d'utiliser `pstmt.setDate()` avec les objets temporels appropriés (ex: `java.sql.Date.valueOf()`).
+Il est meilleur de passer les 2 dates avec le type Date plutôt que le type String car le type Date offre de nombreuses méthodes de manipulation
+====
+
+=== Questions 2.4 et 2.5 — Tests unitaires (JUnit)
+**Votre réponse :** Tests d'initialisation et des différents paliers (150, 300, 600, 50).
+
+[NOTE]
+.Évaluation - Conforme
+====
+Les règles de gestion sont toutes testées et la syntaxe des assertions est correcte.
+====
+
+== Mission 3 : Statistiques de ventes (POO)
+
+=== Questions 3.1 à 3.5 — Javadoc, Méthodes, Héritage et Robustesse
+**Votre réponse :** Javadoc rédigée, utilisation de `.size()`, `super()`, `instanceof` et sécurisation de la division par zéro.
+
+[NOTE]
+.Évaluation - Validé
+====
+Ces questions sont correctement traitées. Les concepts de POO sont appliqués et le calcul est protégé contre l'exception mathématique.
+====
+
+=== Question 3.6 — Filtrage des ventes
+**Votre réponse :** Code reprenant la gestion de la division par zéro.
+
+[WARNING]
+.Erreur - Réponse hors sujet
+====
+Vous avez copié-collé le code de la question 3.5 (gestion de `totalEcom != 0`) pour répondre à la question 3.6. L'algorithme de filtrage attendu (parcours de la collection, test d'un seuil de montant, et renvoi d'une nouvelle liste) est par conséquent manquant.
+====
+
+---
+
+== Partie 4 : Questions de synthèse (Java, SQL et Sécurité)
+
+**Vos réponses :** Traitement des 10 questions (NF525, OWASP, WHERE/HAVING, JavaFX, etc.).
+
+[NOTE]
+.Évaluation - Très satisfaisant
+====
+Vos réponses de synthèse sont bonnes. Elles sont concises, justes techniquement, et démontrent une bonne prise de recul.
+La critique de `instanceof` (rupture d'encapsulation / polymorphisme) et l'explication sur la classe `Launcher` liée aux modules du JDK 11+ sont particulièrement pertinentes.
+
+En revanche il est nécessaire de m'appeler pour les valider.
+====
+
+== Conclusion
+
+Note: *15 / 20*
+
+Le résultat est solide, malgré une étourderie sur la question 3.6. Pour consolider ce résultat par la suite (prochaines études de cas), vous devez :
+
+- Vous rapprocher de M. Robert afin de passer l'entretien oral obligatoire de validation des acquis sur cette copie.
+- Travailler dans la continuité sans vous disperser
+- Préparer la présentation de votre prototype fonctionnel (JavaFX/Hibernate).
